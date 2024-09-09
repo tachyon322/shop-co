@@ -5,13 +5,19 @@ import { DEFAULT_REDIRECT, publicRoutes, apiRoute, authRoutes } from "@/routes";
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  const isLoggedIn = !!req.auth;
+  const { nextUrl } = req;
+  const isLoggedIn = !!auth;
   console.log("IS LOGGED IN:", isLoggedIn);
 
-  const isApi = req.nextUrl.pathname.startsWith(apiRoute);
-  const isPublic = publicRoutes.includes(req.nextUrl.pathname);
-  const isAuth = authRoutes.includes(req.nextUrl.pathname);
-  const isDefault = req.nextUrl.pathname === DEFAULT_REDIRECT;
+  const isApi = nextUrl.pathname.startsWith(apiRoute);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isDefault = nextUrl.pathname === DEFAULT_REDIRECT;
+
+  if ( isAuthRoute ){
+    if (isLoggedIn){
+      return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl))
+    }
+  }
 });
 
 // Optionally, don't invoke Middleware on some paths

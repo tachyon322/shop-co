@@ -14,7 +14,7 @@ export const publicRoutes = [
 ]
 
 export const authRoutes = [
-    ""
+    "/settings"
 ]
 
 export const apiRoute = "/api/auth"
